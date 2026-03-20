@@ -5,6 +5,7 @@ import { User, Session } from '@supabase/supabase-js'
 interface AuthContextType {
   user: User | null
   session: Session | null
+  role: 'admin' | 'customer' | null
   loading: boolean
   isAdmin: boolean
   signInWithGoogle: () => Promise<void>
@@ -20,10 +21,11 @@ const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL || process.env.ADMIN_EMA
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [session, setSession] = useState<Session | null>(null)
+  const [role, setRole] = useState<'admin' | 'customer' | null>(null)
   const [loading, setLoading] = useState(true)
   const [isMounted, setIsMounted] = useState(false)
 
-  const isAdmin = user?.email === ADMIN_EMAIL
+  const isAdmin = user?.email === ADMIN_EMAIL || role === 'admin'
 
   useEffect(() => {
     setIsMounted(true)
@@ -40,6 +42,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { data: { session } } = await supabaseBrowserClient.auth.getSession()
         setSession(session)
         setUser(session?.user ?? null)
+
+        // Determinar rol desde tabla `profiles` (o `users` como alternativa)
+        if (session?.user?.email) {
+          if (session.user.email === ADMIN_EMAIL) {
+            setRole('admin')
+          } else {
+            const { data: profileData, error: profileError } = await supabaseBrowserClient
+              .from('profiles')
+              .select('role')
+              .eq('email', session.user.email)
+              .single()
+
+            if (!profileError && profileData?.role === 'admin') {
+              setRole('admin')
+            } else {
+              setRole('customer')
+            }
+          }
+        }
+
         setLoading(false)
       } catch (error) {
         console.error('Error getting session:', error)
@@ -101,6 +123,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         user,
         session,
+        role,
         loading: isMounted ? loading : true,
         isAdmin,
         signInWithGoogle,

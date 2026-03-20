@@ -12,8 +12,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ success: false, error: 'Method not allowed' })
   }
 
+  if (!process.env.MERCADOPAGO_ACCESS_TOKEN) {
+    return res.status(500).json({ success: false, error: 'MERCADOPAGO_ACCESS_TOKEN no configurado en .env' })
+  }
+
   try {
     const { items, payer, metadata } = req.body
+
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ success: false, error: 'items debe ser un array con al menos un producto' })
+    }
+
+    if (!payer || !payer.email || !payer.name) {
+      return res.status(400).json({ success: false, error: 'payer.name y payer.email son requeridos' })
+    }
 
     // Crear preferencia de Mercado Pago
     const preference = {
@@ -55,10 +67,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     })
   } catch (error: any) {
-    console.error('Error creating Mercado Pago preference:', error)
+    const mpError =
+      error?.response?.body ||
+      error?.response?._response ||
+      error?.message ||
+      JSON.stringify(error)
+
+    console.error('Error creating Mercado Pago preference:', mpError)
+
     res.status(500).json({
       success: false,
-      error: error.message,
+      error: mpError,
     })
   }
 }
