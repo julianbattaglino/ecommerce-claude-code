@@ -1,10 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import MercadoPago from 'mercadopago'
+import { MercadoPagoConfig, Preference } from 'mercadopago'
 
 // Configurar Mercado Pago
-MercadoPago.configure({
-  access_token: process.env.MERCADOPAGO_ACCESS_TOKEN || '',
+const mercadoPagoConfig = new MercadoPagoConfig({
+  accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN || '',
 })
+const mercadoPagoPreference = new Preference(mercadoPagoConfig)
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -43,14 +44,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       external_reference: `ORDER-${Date.now()}`,
     }
 
-    const response = await MercadoPago.preferences.create(preference)
+    const response = await mercadoPagoPreference.create({ body: preference })
 
     return res.status(200).json({
       success: true,
       data: {
-        id: response.body.id,
-        init_point: response.body.init_point,
-        sandbox_init_point: response.body.sandbox_init_point,
+        id: response.id,
+        init_point: response.init_point,
+        sandbox_init_point: response.sandbox_init_point,
       },
     })
   } catch (error: any) {

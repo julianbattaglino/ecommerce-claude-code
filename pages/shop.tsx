@@ -1,16 +1,16 @@
 import Head from 'next/head'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import ProductFilters from '@/components/products/ProductFilters'
+import ProductFiltersComponent from '@/components/products/ProductFilters'
 import ProductGrid from '@/components/products/ProductGrid'
-import { Product, Filter } from '@/types'
+import { Product, Filter, ProductFilters } from '@/types'
 import styles from '@/styles/Shop.module.css'
 
 export default function Shop() {
   const [products, setProducts] = useState<Product[]>([])
   const [filters, setFilters] = useState<Filter[]>([])
   const [loading, setLoading] = useState(true)
-  const [activeFilters, setActiveFilters] = useState<Record<string, string | string[]>>({})
+  const [activeFilters, setActiveFilters] = useState<ProductFilters>({})
 
   useEffect(() => {
     fetchFilters()
@@ -37,8 +37,8 @@ export default function Shop() {
       Object.entries(activeFilters).forEach(([key, value]) => {
         if (Array.isArray(value)) {
           value.forEach(v => queryParams.append(key, v))
-        } else if (value) {
-          queryParams.append(key, value)
+        } else if (value !== undefined && value !== null && value !== '') {
+          queryParams.append(key, String(value))
         }
       })
 
@@ -69,7 +69,7 @@ export default function Shop() {
 
         <div className={styles.content}>
           <aside className={styles.sidebar}>
-            <ProductFilters
+            <ProductFiltersComponent
               filters={filters}
               activeFilters={activeFilters}
               onFilterChange={setActiveFilters}

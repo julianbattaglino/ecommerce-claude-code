@@ -1,19 +1,30 @@
 import { createPagesServerClient } from '@supabase/auth-helpers-nextjs'
 import { createClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
-import { NextRequest } from 'next/server'
+import type {
+  GetServerSidePropsContext,
+  NextApiRequest,
+  NextApiResponse,
+} from 'next'
 
 export const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-export const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY || ''
+export const supabaseAnonKey =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY ||
+  ''
 export const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 
+export type SupabasePagesServerContext =
+  | GetServerSidePropsContext
+  | { req: NextApiRequest; res: NextApiResponse }
+
 // Server client with auth helpers
-export const createSupabaseServerClient = (req?: NextRequest) => {
-  if (req) {
-    return createPagesServerClient({ req, supabaseUrl, supabaseKey: supabaseAnonKey })
+export const createSupabaseServerClient = (
+  context?: SupabasePagesServerContext
+) => {
+  if (!context) {
+    throw new Error('createSupabaseServerClient requires a server-side context')
   }
-  // Para uso en server components sin req
-  return createPagesServerClient({ supabaseUrl, supabaseKey: supabaseAnonKey })
+  return createPagesServerClient(context)
 }
 
 // Admin client with service role (bypasses RLS)
