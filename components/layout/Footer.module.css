@@ -1,0 +1,95 @@
+.footer {
+  background-color: #000;
+  color: #fff;
+  padding: 3rem 0 1.5rem;
+  margin-top: auto;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.section {
+  min-width: 0;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: 0.05em;
+}
+
+.description {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #d4c8b0;
+}
+
+.subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.links a {
+  color: #d4c8b0;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s ease;
+}
+
+.links a:hover {
+  color: #fff;
+}
+
+.contactInfo {
+  font-size: 0.875rem;
+  color: #d4c8b0;
+  line-height: 1.8;
+}
+
+.bottom {
+  border-top: 1px solid #333;
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+.bottom p {
+  font-size: 0.875rem;
+  color: #d4c8b0;
+  margin-bottom: 0.5rem;
+}
+
+.note {
+  font-style: italic;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,72 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log
+
+# Next.js
+.next/
+out/
+build/
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+.env
+
+# Log files
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE/Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Typescript
+*.tsbuildinfo
+
+# Misc
+*.pem
+*.key
+*.crt
+public/static
+
+# Optional: Mac and Linux
+*.pid
+*.seed
+*.pid.lock
+
+# Debug
+debug.log
+.nyc_output
+coverage/
+coverage.*
+
+# Upload artifacts
+dist/
+
+# JetBrains
+*.iml
+
+# Supabase
+/.supabase
+
+# Local env
+.env.*

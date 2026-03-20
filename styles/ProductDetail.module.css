@@ -1,0 +1,162 @@
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 3rem var(--spacer);
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 3rem;
+  margin-top: 2rem;
+}
+
+.imageSection {
+  order: 1;
+}
+
+.infoSection {
+  order: 2;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: var(--color-black);
+}
+
+.price {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-dark-gray);
+  margin-bottom: 2rem;
+}
+
+.description {
+  background: var(--color-light-gray);
+  padding: 1.5rem;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+}
+
+.description p {
+  margin-bottom: 0;
+  line-height: 1.8;
+}
+
+.details,
+.specs {
+  margin-bottom: 2rem;
+}
+
+.details h3,
+.specs h3 {
+  margin-bottom: 1rem;
+  color: var(--color-black);
+}
+
+.specs ul {
+  list-style: none;
+  padding: 0;
+}
+
+.specs li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-dark-gray);
+}
+
+.specs li:last-child {
+  border-bottom: none;
+}
+
+.shipping {
+  background: var(--color-beige);
+  padding: 1.5rem;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+}
+
+.shippingMessage {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-dark-gray);
+}
+
+.purchase {
+  margin-bottom: 2rem;
+}
+
+.quantity {
+  margin-bottom: 1.5rem;
+}
+
+.quantity label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--color-black);
+}
+
+.quantityInput {
+  width: 100px;
+  padding: 0.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.addToCartButton {
+  width: 100%;
+  padding: 1rem;
+  background: var(--color-black);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: var(--transition);
+  margin-bottom: 1rem;
+}
+
+.addToCartButton:hover {
+  opacity: 0.8;
+}
+
+.authRequired {
+  background: var(--color-light-gray);
+  padding: 1.5rem;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.loginLink {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  background: var(--color-black);
+  color: white;
+  border-radius: 4px;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.loading,
+.notFound {
+  text-align: center;
+  padding: 4rem var(--spacer);
+  color: var(--color-dark-gray);
+}
+
+@media (max-width: 768px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .price {
+    font-size: 1.5rem;
+  }
+}

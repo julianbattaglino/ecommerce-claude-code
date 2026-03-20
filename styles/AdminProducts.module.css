@@ -1,0 +1,143 @@
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 3rem var(--spacer);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 1.8rem;
+  color: var(--color-black);
+  margin: 0;
+}
+
+.createButton {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-black);
+  color: white;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.createButton:hover {
+  opacity: 0.8;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.table thead {
+  background: var(--color-light-gray);
+}
+
+.table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.table tbody tr:hover {
+  background: var(--color-light-gray);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.actions a,
+.deleteButton {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--color-light-gray);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.actions a:hover,
+.deleteButton:hover {
+  background: #e0e0e0;
+}
+
+.deleteButton {
+  background: #ffebee;
+  border-color: #ef5350;
+  color: #d32f2f;
+}
+
+.deleteButton:hover {
+  background: #ffcdd2;
+}
+
+.empty {
+  text-align: center;
+  padding: 4rem;
+  background: var(--color-light-gray);
+  border-radius: 4px;
+}
+
+.empty p {
+  margin-bottom: 1.5rem;
+}
+
+.empty a {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-black);
+  color: white;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.loading,
+.unauthorized {
+  text-align: center;
+  padding: 4rem;
+  color: var(--color-dark-gray);
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .table {
+    font-size: 0.9rem;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+}
