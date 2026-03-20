@@ -72,10 +72,15 @@ export default function Checkout() {
       })
 
       const data = await response.json()
-      if (data.success && data.data.init_point) {
+      if (data.success && data.data?.init_point) {
         window.location.href = data.data.init_point
       } else {
-        alert('Error al crear la preferencia de pago')
+        console.error('Mercado Pago API error:', data)
+        alert(
+          `Error al crear la preferencia de pago: ${
+            data.error || data?.message || 'respuesta inválida'
+          }`
+        )
       }
     } catch (error) {
       console.error('Error:', error)
