@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Filter, ProductFilters } from '@/types'
+import { Filter } from '@/types'
+import type { ProductFilters } from '@/types'
 import { getFilters } from '@/lib/api'
 import styles from './ProductFilters.module.css'
 
