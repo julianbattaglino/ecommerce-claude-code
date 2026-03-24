@@ -48,15 +48,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (session.user.email === ADMIN_EMAIL) {
             setRole('admin')
           } else {
-            const { data: profileData, error: profileError } = await supabaseBrowserClient
-              .from('profiles')
-              .select('role')
-              .eq('email', session.user.email)
-              .single()
+            try {
+              const { data: profileData, error: profileError } = await supabaseBrowserClient
+                .from('profiles')
+                .select('role')
+                .eq('email', session.user.email)
+                .single()
 
-            if (!profileError && profileData?.role === 'admin') {
-              setRole('admin')
-            } else {
+              if (!profileError && profileData?.role === 'admin') {
+                setRole('admin')
+              } else {
+                setRole('customer')
+              }
+            } catch (profileError) {
+              console.warn('profiles table not found or query failed; using default customer role', profileError)
               setRole('customer')
             }
           }

@@ -127,6 +127,16 @@
   background: rgba(0, 0, 0, 0.9);
 }
 
+.hint {
+  color: var(--color-dark-gray);
+  margin-top: 0.5rem;
+}
+
+.error {
+  color: #d92b2b;
+  margin-top: 0.5rem;
+}
+
 .submitButton {
   width: 100%;
   padding: 1rem;

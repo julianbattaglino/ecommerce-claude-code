@@ -13,16 +13,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // Obtener estadísticas para admin
-    const [productsCount, ordersCount] = await Promise.all([
-      supabase.from('products').select('*', { count: 'exact' }).then(r => r.count || 0),
-      supabase.from('orders').select('*', { count: 'exact' }).then(r => r.count || 0),
+    const [productsResult, ordersResult] = await Promise.all([
+      supabase.from('products').select('*', { count: 'exact', head: true }),
+      supabase.from('orders').select('*', { count: 'exact', head: true }),
     ])
+
+    const totalProducts = productsResult.count || 0
+    const totalOrders = ordersResult.count || 0
 
     return res.status(200).json({
       success: true,
       data: {
-        totalProducts: 0, // Será actualizado con datos reales
-        totalOrders: 0,
+        totalProducts,
+        totalOrders,
         totalRevenue: 0,
       },
     })

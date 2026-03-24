@@ -18,31 +18,56 @@ const defaultFormData: ProductInput = {
   filters: {},
 }
 
-export default function CreateProduct() {
+export default function EditProduct() {
   const router = useRouter()
+  const { id } = router.query
   const { user, isAdmin, loading: authLoading } = useAuth()
   const [formData, setFormData] = useState<ProductInput>(defaultFormData)
   const [loading, setLoading] = useState(false)
   const [imageUrl, setImageUrl] = useState('')
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState<string | null>(null)
+  const [loadingData, setLoadingData] = useState(true)
 
   useEffect(() => {
     if (!authLoading && (!user || !isAdmin)) {
       router.push('/')
+      return
     }
-  }, [user, isAdmin, authLoading, router])
 
-  if (authLoading) {
-    return <div className={styles.loading}>Cargando...</div>
-  }
+    if (id) {
+      fetchProduct()
+    }
+  }, [id, user, isAdmin, authLoading, router])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'price' ? parseFloat(value) : value,
-    }))
+  const fetchProduct = async () => {
+    if (!id || typeof id !== 'string') return
+
+    try {
+      const response = await fetch(`/api/products/${id}`)
+      const data = await response.json()
+      if (data.success && data.data) {
+        setFormData({
+          title: data.data.title || '',
+          price: data.data.price || 0,
+          description: data.data.description || '',
+          images: data.data.images || [],
+          details: data.data.details || '',
+          technical_specifications: data.data.technical_specifications || {},
+          category: data.data.category || '',
+          filters: data.data.filters || {},
+        })
+      } else {
+        alert(data.error || 'No se pudo cargar el producto')
+        router.push('/admin/products')
+      }
+    } catch (error) {
+      console.error('Error cargando producto:', error)
+      alert('Error cargando producto')
+      router.push('/admin/products')
+    } finally {
+      setLoadingData(false)
+    }
   }
 
   const uploadImageFile = async (file: File) => {
@@ -73,6 +98,14 @@ export default function CreateProduct() {
     }
   }
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'price' ? parseFloat(value) : value,
+    }))
+  }
+
   const handleAddImage = () => {
     if (imageUrl) {
       setFormData(prev => ({
@@ -92,11 +125,13 @@ export default function CreateProduct() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (!id || typeof id !== 'string') return
+
     setLoading(true)
 
     try {
-      const response = await fetch('/api/admin/products', {
-        method: 'POST',
+      const response = await fetch(`/api/products/${id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
@@ -105,20 +140,24 @@ export default function CreateProduct() {
       if (data.success) {
         router.push('/admin/products')
       } else {
-        alert('Error al crear el producto')
+        alert(data.error || 'Error al actualizar el producto')
       }
     } catch (error) {
-      console.error('Error:', error)
-      alert('Error al crear el producto')
+      console.error('Error al actualizar producto:', error)
+      alert('Error al actualizar el producto')
     } finally {
       setLoading(false)
     }
   }
 
+  if (authLoading || loadingData) {
+    return <div className={styles.loading}>Cargando...</div>
+  }
+
   return (
     <>
       <Head>
-        <title>Crear Producto - Admin</title>
+        <title>Editar Producto - Admin</title>
       </Head>
 
       <div className={styles.container}>
@@ -126,7 +165,7 @@ export default function CreateProduct() {
           ← Volver
         </Link>
 
-        <h1 className={styles.title}>Crear Nuevo Producto</h1>
+        <h1 className={styles.title}>Editar Producto</h1>
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
@@ -247,7 +286,7 @@ export default function CreateProduct() {
             disabled={loading}
             className={styles.submitButton}
           >
-            {loading ? 'Creando...' : 'Crear Producto'}
+            {loading ? 'Guardando...' : 'Guardar cambios'}
           </button>
         </form>
       </div>

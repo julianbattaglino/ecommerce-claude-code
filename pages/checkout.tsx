@@ -48,6 +48,33 @@ export default function Checkout() {
   const handleMercadoPagoPayment = async () => {
     setLoading(true)
     try {
+      // Primero crear la orden
+      const orderResponse = await fetch('/api/orders/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: items.map(item => ({
+            productId: item.product.id,
+            title: item.product.title,
+            quantity: item.quantity,
+            price: item.product.price,
+          })),
+          total: getTotal(),
+          paymentMethod: 'mercadopago',
+          customerName: formData.fullName,
+          customerEmail: formData.email,
+          customerPhone: formData.phone,
+          deliveryAddress: formData.address,
+          deliveryCity: formData.city,
+          deliveryZipCode: formData.zipCode,
+        }),
+      })
+
+      const orderData = await orderResponse.json()
+      if (!orderData.success) {
+        throw new Error('No se pudo crear la orden')
+      }
+
       const response = await fetch('/api/mercadopago/create-preference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -67,12 +94,14 @@ export default function Checkout() {
             address: formData.address,
             city: formData.city,
             zipCode: formData.zipCode,
+            orderId: orderData.data.orderId,
           }
         }),
       })
 
       const data = await response.json()
       if (data.success && data.data?.init_point) {
+        clearCart()
         window.location.href = data.data.init_point
       } else {
         console.error('Mercado Pago API error:', data)
@@ -91,10 +120,43 @@ export default function Checkout() {
   }
 
   const handleBankTransfer = async () => {
-    alert('Pago por transferencia bancaria - Se te contactará con los datos para realizar la transferencia.')
-    // Aquí se podría guardar el pedido en la BD y enviar email
-    clearCart()
-    router.push('/orders')
+    setLoading(true)
+    try {
+      // Crear la orden en la BD
+      const response = await fetch('/api/orders/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          items: items.map(item => ({
+            productId: item.product.id,
+            title: item.product.title,
+            quantity: item.quantity,
+            price: item.product.price,
+          })),
+          total: getTotal(),
+          paymentMethod: 'transfer',
+          customerName: formData.fullName,
+          customerEmail: formData.email,
+          customerPhone: formData.phone,
+          deliveryAddress: formData.address,
+          deliveryCity: formData.city,
+          deliveryZipCode: formData.zipCode,
+        }),
+      })
+
+      const data = await response.json()
+      if (data.success && data.data?.orderId) {
+        clearCart()
+        router.push(`/order-created?orderId=${data.data.orderId}`)
+      } else {
+        alert('Error al crear la orden')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('Error al procesar la orden')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
